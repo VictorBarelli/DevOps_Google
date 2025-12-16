@@ -11,7 +11,7 @@ if (-not $ProjectId) {
     exit 1
 }
 
-$Region = "us-central1"
+$Region = "us-east1"
 $RepoName = "todo-repo"
 $ServiceName = "todo-api"
 $ImageName = "$Region-docker.pkg.dev/$ProjectId/$RepoName/todo-app:latest"
@@ -23,7 +23,7 @@ Write-Host "Enabling services (if not enabled via Terraform yet)..."
 gcloud services enable artifactregistry.googleapis.com run.googleapis.com
 
 Write-Host "Initializing Terraform..."
-cd ..\terraform
+Set-Location ..\terraform
 terraform init
 terraform apply -var="project_id=$ProjectId" -auto-approve
 
@@ -31,7 +31,7 @@ Write-Host "Authenticating Docker with Artifact Registry..."
 gcloud auth configure-docker "$Region-docker.pkg.dev" --quiet
 
 Write-Host "Building Docker image..."
-cd ..\app
+Set-Location ..\app
 docker build -t $ImageName .
 
 Write-Host "Pushing Docker image to Artifact Registry..."

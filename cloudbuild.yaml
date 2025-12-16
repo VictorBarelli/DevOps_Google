@@ -1,0 +1,54 @@
+steps:
+  # Step 1: Initialize Terraform
+  - name: 'hashicorp/terraform:latest'
+    dir: 'terraform'
+    args: ['init']
+
+  # Step 2: Apply Terraform configuration
+  - name: 'hashicorp/terraform:latest'
+    dir: 'terraform'
+    args: ['apply', '-var=project_id=$PROJECT_ID', '-auto-approve']
+
+  # Step 3: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'app'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app:latest'
+      - '.'
+
+  # Step 4: Push Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app'
+
+  # Step 5: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app:$COMMIT_SHA'
+      - '--region=${_REGION}'
+      - '--allow-unauthenticated'
+
+# Substitution variables (can be overridden at build time)
+substitutions:
+  _REGION: 'us-east1'
+  _REPO_NAME: 'todo-repo'
+  _SERVICE_NAME: 'todo-api'
+
+# Build options
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+# Images to be pushed (for caching)
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app:latest'
