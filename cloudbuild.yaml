@@ -1,4 +1,14 @@
 steps:
+  # Step 0: Run Tests
+  - name: 'python:3.11-slim'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install -r app/requirements.txt
+        cd app && python -m pytest ../tests/ -v --tb=short
+    id: 'test'
+
   # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
@@ -10,6 +20,8 @@ steps:
       - '-t'
       - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app:latest'
       - 'app'
+    waitFor: ['test']
+    id: 'build'
 
   # Step 2: Push Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -17,6 +29,8 @@ steps:
       - 'push'
       - '--all-tags'
       - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app'
+    waitFor: ['build']
+    id: 'push'
 
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -28,12 +42,13 @@ steps:
       - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app:$COMMIT_SHA'
       - '--region=${_REGION}'
       - '--allow-unauthenticated'
+    waitFor: ['push']
 
 # Substitution variables (can be overridden at build time)
 substitutions:
   _REGION: 'us-east1'
   _REPO_NAME: 'cloud-run-source-deploy'
-  _SERVICE_NAME: 'todo-api'
+  _SERVICE_NAME: 'devops-google'
 
 # Build options
 options:
