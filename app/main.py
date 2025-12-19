@@ -69,9 +69,11 @@ def create_default_admin():
         print(f"Default admin created: {admin_email}")
 
 
-with app.app_context():
-    db.create_all()
-    create_default_admin()
+# Only initialize database if not in testing mode
+if not os.environ.get('TESTING'):
+    with app.app_context():
+        db.create_all()
+        create_default_admin()
 
 
 @app.route('/')
