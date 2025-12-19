@@ -10,6 +10,180 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .project-overview {
+            margin-top: 32px;
+        }
+
+        .section-title {
+            color: var(--text-primary);
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: var(--transition-smooth);
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-purple);
+        }
+
+        .info-card h3 {
+            color: var(--text-primary);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-card ul {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 20px;
+            margin: 12px 0 0 0;
+        }
+
+        .info-card li {
+            margin-bottom: 4px;
+        }
+
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            color: var(--accent-purple);
+            font-size: 12px;
+            font-weight: 500;
+            margin: 4px;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .pipeline-flow {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .pipeline-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .pipeline-step {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .pipeline-step .icon {
+            width: 56px;
+            height: 56px;
+            background: var(--primary-gradient);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 24px;
+        }
+
+        .pipeline-step .label {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .pipeline-step .sublabel {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .pipeline-arrow {
+            color: var(--accent-purple);
+            font-size: 24px;
+        }
+
+        .architecture-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .file-structure {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+        .file-structure .folder {
+            color: var(--accent-purple);
+        }
+
+        .file-structure .file {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .pipeline-arrow {
+                display: none;
+            }
+
+            .pipeline-steps {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -35,9 +209,173 @@
         </header>
 
         <main class="dashboard-content">
+            <!-- Welcome Card -->
             <div class="welcome-card">
                 <h1>Welcome, {{ username }}! 👋</h1>
-                <p>You've successfully logged in to your DevOps dashboard. Start managing your cloud infrastructure.</p>
+                <p>You've successfully logged in to your DevOps dashboard. Explore the project details below.</p>
+            </div>
+
+            <!-- Project Overview -->
+            <div class="project-overview">
+                <h2 class="section-title">📋 Project Overview</h2>
+
+                <!-- CI/CD Pipeline Flow -->
+                <div class="pipeline-flow">
+                    <h3 style="color: var(--text-primary); margin-bottom: 24px; font-size: 18px;">🔄 CI/CD Pipeline Flow
+                    </h3>
+                    <div class="pipeline-steps">
+                        <div class="pipeline-step">
+                            <div class="icon">📝</div>
+                            <div class="label">Code Push</div>
+                            <div class="sublabel">GitHub</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="icon">🔨</div>
+                            <div class="label">Build</div>
+                            <div class="sublabel">Cloud Build</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="icon">🐳</div>
+                            <div class="label">Containerize</div>
+                            <div class="sublabel">Docker</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="icon">📦</div>
+                            <div class="label">Registry</div>
+                            <div class="sublabel">Artifact Registry</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="icon">☁️</div>
+                            <div class="label">Deploy</div>
+                            <div class="sublabel">Cloud Run</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Cards Grid -->
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>☁️ Google Cloud Services</h3>
+                        <p>This project leverages several GCP services for a complete DevOps workflow:</p>
+                        <ul>
+                            <li><strong>Cloud Run</strong> - Serverless container hosting</li>
+                            <li><strong>Cloud Build</strong> - CI/CD automation</li>
+                            <li><strong>Artifact Registry</strong> - Docker image storage</li>
+                            <li><strong>Cloud Logging</strong> - Centralized logs</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🏗️ Infrastructure as Code</h3>
+                        <p>Infrastructure is managed using Terraform for reproducibility:</p>
+                        <ul>
+                            <li><strong>Terraform</strong> - Provisions GCP resources</li>
+                            <li><strong>Variables</strong> - Configurable deployments</li>
+                            <li><strong>State Management</strong> - Tracks infrastructure</li>
+                            <li><strong>Automated Setup</strong> - One command deploy</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🐍 Application Stack</h3>
+                        <p>The web application is built with modern Python technologies:</p>
+                        <ul>
+                            <li><strong>Flask</strong> - Lightweight web framework</li>
+                            <li><strong>SQLAlchemy</strong> - Database ORM</li>
+                            <li><strong>SQLite</strong> - Embedded database</li>
+                            <li><strong>Gunicorn</strong> - Production WSGI server</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🔐 Security Features</h3>
+                        <p>Security best practices implemented throughout:</p>
+                        <ul>
+                            <li><strong>Password Hashing</strong> - Werkzeug security</li>
+                            <li><strong>Session Management</strong> - Secure cookies</li>
+                            <li><strong>Admin Roles</strong> - Role-based access</li>
+                            <li><strong>Secret Keys</strong> - Environment variables</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🌿 Branching Strategy</h3>
+                        <p>Git workflow for safe deployments:</p>
+                        <ul>
+                            <li><strong>main</strong> - Production deployments</li>
+                            <li><strong>dev</strong> - Staging/testing environment</li>
+                            <li><strong>Feature branches</strong> - New development</li>
+                            <li><strong>Pull Requests</strong> - Code review process</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🎨 Frontend Design</h3>
+                        <p>Modern UI with premium aesthetics:</p>
+                        <ul>
+                            <li><strong>Glassmorphism</strong> - Frosted glass effects</li>
+                            <li><strong>CSS Animations</strong> - Smooth transitions</li>
+                            <li><strong>Responsive</strong> - Mobile-friendly design</li>
+                            <li><strong>Inter Font</strong> - Clean typography</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Architecture Section -->
+                <div class="architecture-section">
+                    <h3 style="color: var(--text-primary); margin-bottom: 20px; font-size: 18px;">📁 Project Structure
+                    </h3>
+                    <div class="file-structure">
+                        <span class="folder">gcp-terraform-devops/</span>
+                        ├── <span class="folder">app/</span>
+                        │ ├── <span class="file">main.py</span> <span style="color: var(--text-muted);"># Flask
+                            application</span>
+                        │ ├── <span class="file">Dockerfile</span> <span style="color: var(--text-muted);"># Container
+                            config</span>
+                        │ ├── <span class="file">requirements.txt</span> <span style="color: var(--text-muted);">#
+                            Python dependencies</span>
+                        │ ├── <span class="folder">templates/</span> <span style="color: var(--text-muted);"># HTML
+                            templates</span>
+                        │ │ ├── <span class="file">login.html</span>
+                        │ │ ├── <span class="file">register.html</span>
+                        │ │ ├── <span class="file">dashboard.html</span>
+                        │ │ └── <span class="file">admin.html</span>
+                        │ └── <span class="folder">static/css/</span> <span style="color: var(--text-muted);">#
+                            Stylesheets</span>
+                        │ └── <span class="file">style.css</span>
+                        ├── <span class="folder">terraform/</span>
+                        │ ├── <span class="file">main.tf</span> <span style="color: var(--text-muted);"># Infrastructure
+                            config</span>
+                        │ └── <span class="file">variables.tf</span> <span style="color: var(--text-muted);"># Variable
+                            definitions</span>
+                        ├── <span class="folder">scripts/</span>
+                        │ └── <span class="file">deploy.ps1</span> <span style="color: var(--text-muted);"># Deployment
+                            script</span>
+                        ├── <span class="file">cloudbuild.yaml</span> <span style="color: var(--text-muted);">#
+                            Production CI/CD</span>
+                        └── <span class="file">cloudbuild-dev.yaml</span> <span style="color: var(--text-muted);">#
+                            Staging CI/CD</span>
+                    </div>
+
+                    <h3 style="color: var(--text-primary); margin: 24px 0 16px; font-size: 18px;">🛠️ Technologies Used
+                    </h3>
+                    <div class="tech-badges">
+                        <span class="tech-badge">☁️ Google Cloud</span>
+                        <span class="tech-badge">🐳 Docker</span>
+                        <span class="tech-badge">🏗️ Terraform</span>
+                        <span class="tech-badge">🐍 Python</span>
+                        <span class="tech-badge">🌶️ Flask</span>
+                        <span class="tech-badge">🔄 Cloud Build</span>
+                        <span class="tech-badge">🚀 Cloud Run</span>
+                        <span class="tech-badge">📦 Artifact Registry</span>
+                        <span class="tech-badge">🐙 GitHub</span>
+                        <span class="tech-badge">💾 SQLite</span>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
