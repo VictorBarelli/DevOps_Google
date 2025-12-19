@@ -12,11 +12,17 @@ variable "region" {
 variable "service_name" {
   description = "The name of the Cloud Run service"
   type        = string
-  default     = "todo-api"
+  default     = "devops-google"
 }
 
 variable "repository_name" {
   description = "The name of the Artifact Registry repository"
   type        = string
-  default     = "todo-repo"
+  default     = "cloud-run-source-deploy"
+}
+
+variable "alert_email" {
+  description = "Email address for monitoring alerts"
+  type        = string
+  default     = "admin@example.com"
 }
