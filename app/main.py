@@ -23,6 +23,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean, default=True)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -33,9 +34,27 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.email}>'
 
-# Create tables
+# Create tables and default admin
+def create_default_admin():
+    """Create default admin account if it doesn't exist"""
+    admin_email = os.environ.get('ADMIN_EMAIL', 'admin@admin.com')
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
+    
+    if not User.query.filter_by(email=admin_email).first():
+        admin = User(
+            name='Administrator',
+            email=admin_email,
+            is_admin=True,
+            is_active=True
+        )
+        admin.set_password(admin_password)
+        db.session.add(admin)
+        db.session.commit()
+        print(f"Default admin created: {admin_email}")
+
 with app.app_context():
     db.create_all()
+    create_default_admin()
 
 @app.route('/')
 def home():
@@ -61,6 +80,7 @@ def login():
             session['user_id'] = user.id
             session['user_email'] = user.email
             session['user_name'] = user.name
+            session['is_admin'] = user.is_admin
             # Update last login
             user.last_login = datetime.utcnow()
             db.session.commit()
@@ -116,9 +136,13 @@ def dashboard():
 
 @app.route('/admin/users')
 def admin_users():
-    """Admin page to view all users"""
+    """Admin page to view all users - Admin only"""
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    
+    # Check if user is admin
+    if not session.get('is_admin', False):
+        return redirect(url_for('dashboard'))
     
     users = User.query.order_by(User.created_at.desc()).all()
     total_users = len(users)
