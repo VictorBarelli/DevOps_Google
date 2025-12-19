@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error | GCP DevOps</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .error-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .error-code {
+            font-size: 150px;
+            font-weight: 700;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            color: var(--text-primary);
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .error-message {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 500px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+            background: none;
+            border: none;
+            padding: 0;
+            animation: none;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .error-btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+        }
+
+        .error-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .error-btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .error-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .error-illustration {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .error-details {
+            margin-top: 32px;
+            padding: 20px;
+            background: rgba(245, 87, 108, 0.1);
+            border: 1px solid rgba(245, 87, 108, 0.2);
+            border-radius: 12px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .error-details p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background Orbs -->
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="error-container">
+        <div class="error-illustration">⚠️</div>
+        <div class="error-code">500</div>
+        <h1 class="error-title">Something Went Wrong</h1>
+        <p class="error-message">
+            We encountered an unexpected error. Our team has been notified and is working on it.
+            Please try again in a few moments.
+        </p>
+        <div class="error-actions">
+            <a href="{{ url_for('home') }}" class="error-btn error-btn-primary">
+                🏠 Go Home
+            </a>
+            <a href="javascript:location.reload()" class="error-btn error-btn-secondary">
+                🔄 Try Again
+            </a>
+        </div>
+        <div class="error-details">
+            <p>If this problem persists, please contact support.</p>
+        </div>
+    </div>
+</body>
+
+</html>

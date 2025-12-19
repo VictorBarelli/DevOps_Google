@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="API Documentation - GCP DevOps Dashboard">
+    <title>API Docs | GCP DevOps</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .docs-container {
+            min-height: 100vh;
+            background: var(--background-gradient);
+            background-attachment: fixed;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .docs-header h2 {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .docs-content {
+            padding: 48px 32px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .docs-title {
+            color: var(--text-primary);
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .docs-subtitle {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .endpoint-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .method-badge {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .method-get {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .method-post {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .endpoint-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .endpoint-section {
+            margin-bottom: 16px;
+        }
+
+        .endpoint-section-title {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .code-block .key {
+            color: #f093fb;
+        }
+
+        .code-block .string {
+            color: #10b981;
+        }
+
+        .code-block .number {
+            color: #667eea;
+        }
+
+        .auth-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .auth-required {
+            background: rgba(245, 87, 108, 0.2);
+            color: var(--accent-coral);
+        }
+
+        .auth-public {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition-smooth);
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .section-divider {
+            height: 1px;
+            background: var(--glass-border);
+            margin: 40px 0;
+        }
+
+        .base-url {
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 32px;
+        }
+
+        .base-url-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .base-url-value {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-purple);
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background Orbs -->
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="docs-container">
+        <header class="docs-header">
+            <h2>📚 API Documentation</h2>
+            <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+        </header>
+
+        <main class="docs-content">
+            <h1 class="docs-title">API Reference</h1>
+            <p class="docs-subtitle">Complete documentation for the GCP DevOps Dashboard API</p>
+
+            <div class="base-url">
+                <div class="base-url-label">Base URL</div>
+                <div class="base-url-value">https://devops-google-xxxxx.run.app</div>
+            </div>
+
+            <!-- Health Check -->
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-path">/api/health</span>
+                    <span class="auth-badge auth-public">Public</span>
+                </div>
+                <p class="endpoint-description">
+                    Health check endpoint for monitoring and uptime checks. Returns the service status and version.
+                </p>
+                <div class="endpoint-section">
+                    <div class="endpoint-section-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"status"</span>: <span class="string">"healthy"</span>,
+  <span class="key">"service"</span>: <span class="string">"devops-google"</span>,
+  <span class="key">"timestamp"</span>: <span class="string">"2024-01-15T10:30:00"</span>,
+  <span class="key">"version"</span>: <span class="string">"1.0.0"</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-path">/api/status</span>
+                    <span class="auth-badge auth-public">Public</span>
+                </div>
+                <p class="endpoint-description">
+                    Returns the API status and authentication state.
+                </p>
+                <div class="endpoint-section">
+                    <div class="endpoint-section-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"message"</span>: <span class="string">"Hello from Google Cloud Run!"</span>,
+  <span class="key">"status"</span>: <span class="string">"success"</span>,
+  <span class="key">"authenticated"</span>: <span class="number">false</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Login -->
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-path">/login</span>
+                    <span class="auth-badge auth-public">Public</span>
+                </div>
+                <p class="endpoint-description">
+                    Authenticate a user and create a session.
+                </p>
+                <div class="endpoint-section">
+                    <div class="endpoint-section-title">Request Body</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"email"</span>: <span class="string">"user@example.com"</span>,
+  <span class="key">"password"</span>: <span class="string">"your-password"</span>
+}</pre>
+                    </div>
+                </div>
+                <div class="endpoint-section">
+                    <div class="endpoint-section-title">Response</div>
+                    <div class="code-block">
+                        <pre>Redirects to /dashboard on success
+Returns error message on failure</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register -->
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-path">/register</span>
+                    <span class="auth-badge auth-public">Public</span>
+                </div>
+                <p class="endpoint-description">
+                    Create a new user account.
+                </p>
+                <div class="endpoint-section">
+                    <div class="endpoint-section-title">Request Body</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"name"</span>: <span class="string">"John Doe"</span>,
+  <span class="key">"email"</span>: <span class="string">"john@example.com"</span>,
+  <span class="key">"password"</span>: <span class="string">"min-6-chars"</span>,
+  <span class="key">"confirm_password"</span>: <span class="string">"min-6-chars"</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- Users -->
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-path">/api/users</span>
+                    <span class="auth-badge auth-required">Auth Required</span>
+                </div>
+                <p class="endpoint-description">
+                    Get a list of all registered users. Requires authentication.
+                </p>
+                <div class="endpoint-section">
+                    <div class="endpoint-section-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"users"</span>: [
+    {
+      <span class="key">"id"</span>: <span class="number">1</span>,
+      <span class="key">"name"</span>: <span class="string">"John Doe"</span>,
+      <span class="key">"email"</span>: <span class="string">"john@example.com"</span>,
+      <span class="key">"created_at"</span>: <span class="string">"2024-01-15T10:00:00"</span>,
+      <span class="key">"last_login"</span>: <span class="string">"2024-01-15T12:30:00"</span>
+    }
+  ]
+}</pre>
+                    </div>
+                </div>
+                <div class="endpoint-section">
+                    <div class="endpoint-section-title">Error Response (401)</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"error"</span>: <span class="string">"Unauthorized"</span>
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout -->
+            <div class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-path">/logout</span>
+                    <span class="auth-badge auth-required">Auth Required</span>
+                </div>
+                <p class="endpoint-description">
+                    End the current user session and redirect to login.
+                </p>
+            </div>
+
+        </main>
+    </div>
+</body>
+
+</html>

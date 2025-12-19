@@ -198,5 +198,33 @@ def api_users():
         ]
     })
 
+@app.route('/api/health')
+def api_health():
+    """Health check endpoint for monitoring"""
+    return jsonify({
+        "status": "healthy",
+        "service": "devops-google",
+        "timestamp": datetime.utcnow().isoformat(),
+        "version": "1.0.0"
+    })
+
+@app.route('/api/docs')
+def api_docs():
+    """API Documentation page"""
+    return render_template('api_docs.html')
+
+# Error Handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    """Handle 404 errors"""
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    """Handle 500 errors"""
+    db.session.rollback()
+    return render_template('500.html'), 500
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+

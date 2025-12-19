@@ -1,21 +1,54 @@
-# Use the official lightweight Python image.
-# https://hub.docker.com/_/python
-FROM python:3.11-slim
+# ===========================================
+# Multi-Stage Dockerfile for Production
+# Optimized for smaller image size and security
+# ===========================================
 
-# Allow statements and log messages to immediately appear in the Knative logs
-ENV PYTHONUNBUFFERED True
+# Stage 1: Builder
+FROM python:3.11-slim AS builder
 
-# Copy local code to the container image.
-ENV APP_HOME /app
+WORKDIR /build
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements.txt
+
+# ===========================================
+# Stage 2: Production
+# ===========================================
+FROM python:3.11-slim AS production
+
+# Security: Run as non-root user
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=True \
+    PYTHONDONTWRITEBYTECODE=1 \
+    APP_HOME=/app \
+    PORT=8080
+
 WORKDIR $APP_HOME
-COPY . ./
 
-# Install production dependencies.
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy wheels from builder and install
+COPY --from=builder /build/wheels /wheels
+RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
+# Copy application code
+COPY --chown=appuser:appgroup . ./
+
+# Switch to non-root user
+USER appuser
+
+# Expose port
+EXPOSE $PORT
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT}/api/health')" || exit 1
+
+# Run the application
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
