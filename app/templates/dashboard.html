@@ -23,9 +23,13 @@
     <div class="dashboard-container">
         <header class="dashboard-header">
             <h2>🚀 GCP DevOps Dashboard</h2>
-            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
-                <button type="submit" class="logout-btn">Sign Out</button>
-            </form>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <a href="{{ url_for('admin_users') }}"
+                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">👥 View Users</a>
+                <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                    <button type="submit" class="logout-btn">Sign Out</button>
+                </form>
+            </div>
         </header>
 
         <main class="dashboard-content">
