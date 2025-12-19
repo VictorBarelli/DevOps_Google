@@ -1,0 +1,49 @@
+# Cloud Build configuration for DEV/STAGING environment
+# This deploys to a separate Cloud Run service for testing
+
+steps:
+  # Step 1: Build Docker image with dev tag
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'app/Dockerfile'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app-dev:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app-dev:latest'
+      - 'app'
+
+  # Step 2: Push Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app-dev'
+
+  # Step 3: Deploy to Cloud Run STAGING service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app-dev:$COMMIT_SHA'
+      - '--region=${_REGION}'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=ENVIRONMENT=staging'
+
+# Substitution variables for DEV environment
+substitutions:
+  _REGION: 'us-east1'
+  _REPO_NAME: 'cloud-run-source-deploy'
+  _SERVICE_NAME: 'devops-google-dev'  # Separate service for staging
+
+# Build options
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+# Images to be pushed
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app-dev:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/todo-app-dev:latest'
