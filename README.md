@@ -62,6 +62,25 @@ Default admin login: `admin@admin.com` / `admin123`
 
 ## CI/CD pipeline
 
+```
+┌────────────────────────────────────────────────────────────────────┐
+│                    SECURITY-FIRST CI/CD PIPELINE                   │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│   ┌────────┐   ┌──────────┐   ┌────────┐   ┌────────────────────┐ │
+│   │  Lint  │──►│ Security │──►│  Test  │──►│  Build Docker      │ │
+│   │ flake8 │   │  Bandit  │   │ pytest │   │  Image             │ │
+│   └────────┘   └──────────┘   └────────┘   └─────────┬──────────┘ │
+│                                                       │            │
+│                                                       ▼            │
+│   ┌────────────────────┐   ┌──────────┐   ┌──────────────────────┐│
+│   │  Deploy to         │◄──│   Push   │◄──│  Container Scan      ││
+│   │  Cloud Run         │   │ Registry │   │  Trivy               ││
+│   └────────────────────┘   └──────────┘   └──────────────────────┘│
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
+
 The pipeline runs on every push:
 1. Lint (flake8) - code style checks
 2. Security scan (Bandit) - Python security vulnerabilities
