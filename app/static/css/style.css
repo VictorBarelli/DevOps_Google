@@ -620,3 +620,42 @@ body:has(.dashboard-container) {
     color: var(--text-secondary);
     font-size: 16px;
 }
+
+/* Navigation Link Hover Effects */
+.dashboard-header a,
+.nav-link {
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dashboard-header a:hover,
+.nav-link:hover {
+    transform: scale(1.1) translateY(-2px);
+    color: var(--accent-purple) !important;
+    text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+.dashboard-header a:active,
+.nav-link:active {
+    transform: scale(0.95);
+}
+
+/* Nav link underline animation */
+.dashboard-header a::after,
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.dashboard-header a:hover::after,
+.nav-link:hover::after {
+    width: 100%;
+}
