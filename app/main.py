@@ -151,6 +151,47 @@ def game():
     return render_template('game.html')
 
 
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    error = None
+    success = None
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+
+        if action == 'update_profile':
+            name = request.form.get('name', '').strip()
+            if name:
+                user.name = name
+                session['user_name'] = name
+                db.session.commit()
+                success = "Profile updated successfully."
+            else:
+                error = "Name cannot be empty."
+
+        elif action == 'change_password':
+            current = request.form.get('current_password', '')
+            new_pass = request.form.get('new_password', '')
+            confirm = request.form.get('confirm_password', '')
+
+            if not user.check_password(current):
+                error = "Current password is incorrect."
+            elif len(new_pass) < 6:
+                error = "New password must be at least 6 characters."
+            elif new_pass != confirm:
+                error = "New passwords do not match."
+            else:
+                user.set_password(new_pass)
+                db.session.commit()
+                success = "Password changed successfully."
+
+    return render_template('settings.html', user=user, error=error, success=success)
+
+
 @app.route('/admin/users')
 def admin_users():
     # admin only

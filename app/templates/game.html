@@ -337,6 +337,8 @@
             <div style="display: flex; gap: 16px; align-items: center;">
                 <a href="{{ url_for('dashboard') }}"
                     style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;"> Dashboard</a>
+                <a href="{{ url_for('settings') }}"
+                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">Settings</a>
                 {% if session.get('is_admin') %}
                 <a href="{{ url_for('admin_users') }}"
                     style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;"> Users</a>
