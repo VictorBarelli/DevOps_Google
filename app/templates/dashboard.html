@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -198,14 +198,14 @@
         <header class="dashboard-header">
             <div style="display: flex; align-items: center; gap: 24px;">
                 <a href="{{ url_for('game') }}"
-                    style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">🎮
+                    style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">
                     Game</a>
-                <h2>🚀 GCP DevOps Dashboard</h2>
+                <h2> GCP DevOps Dashboard</h2>
             </div>
             <div style="display: flex; gap: 16px; align-items: center;">
                 {% if session.get('is_admin') %}
                 <a href="{{ url_for('admin_users') }}"
-                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">👥 View Users</a>
+                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;"> View Users</a>
                 {% endif %}
                 <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
                     <button type="submit" class="logout-btn">Sign Out</button>
@@ -216,45 +216,45 @@
         <main class="dashboard-content">
             <!-- Welcome Card -->
             <div class="welcome-card">
-                <h1>Welcome, {{ username }}! 👋</h1>
+                <h1>Welcome, {{ username }}! </h1>
                 <p>You've successfully logged in to your DevOps dashboard. Explore the project details below.</p>
             </div>
 
             <!-- Project Overview -->
             <div class="project-overview">
-                <h2 class="section-title">📋 Project Overview</h2>
+                <h2 class="section-title"> Project Overview</h2>
 
                 <!-- CI/CD Pipeline Flow -->
                 <div class="pipeline-flow">
-                    <h3 style="color: var(--text-primary); margin-bottom: 24px; font-size: 18px;">🔄 CI/CD Pipeline Flow
+                    <h3 style="color: var(--text-primary); margin-bottom: 24px; font-size: 18px;"> CI/CD Pipeline Flow
                     </h3>
                     <div class="pipeline-steps">
                         <div class="pipeline-step">
-                            <div class="icon">📝</div>
+                            <div class="icon"></div>
                             <div class="label">Code Push</div>
                             <div class="sublabel">GitHub</div>
                         </div>
                         <div class="pipeline-arrow">→</div>
                         <div class="pipeline-step">
-                            <div class="icon">🔨</div>
+                            <div class="icon"></div>
                             <div class="label">Build</div>
                             <div class="sublabel">Cloud Build</div>
                         </div>
                         <div class="pipeline-arrow">→</div>
                         <div class="pipeline-step">
-                            <div class="icon">🐳</div>
+                            <div class="icon"></div>
                             <div class="label">Containerize</div>
                             <div class="sublabel">Docker</div>
                         </div>
                         <div class="pipeline-arrow">→</div>
                         <div class="pipeline-step">
-                            <div class="icon">📦</div>
+                            <div class="icon"></div>
                             <div class="label">Registry</div>
                             <div class="sublabel">Artifact Registry</div>
                         </div>
                         <div class="pipeline-arrow">→</div>
                         <div class="pipeline-step">
-                            <div class="icon">☁️</div>
+                            <div class="icon"></div>
                             <div class="label">Deploy</div>
                             <div class="sublabel">Cloud Run</div>
                         </div>
@@ -264,7 +264,7 @@
                 <!-- Info Cards Grid -->
                 <div class="info-grid">
                     <div class="info-card">
-                        <h3>☁️ Google Cloud Services</h3>
+                        <h3> Google Cloud Services</h3>
                         <p>This project leverages several GCP services for a complete DevOps workflow:</p>
                         <ul>
                             <li><strong>Cloud Run</strong> - Serverless container hosting</li>
@@ -275,7 +275,7 @@
                     </div>
 
                     <div class="info-card">
-                        <h3>🏗️ Infrastructure as Code</h3>
+                        <h3> Infrastructure as Code</h3>
                         <p>Infrastructure is managed using Terraform for reproducibility:</p>
                         <ul>
                             <li><strong>Terraform</strong> - Provisions GCP resources</li>
@@ -286,7 +286,7 @@
                     </div>
 
                     <div class="info-card">
-                        <h3>🐍 Application Stack</h3>
+                        <h3> Application Stack</h3>
                         <p>The web application is built with modern Python technologies:</p>
                         <ul>
                             <li><strong>Flask</strong> - Lightweight web framework</li>
@@ -297,7 +297,7 @@
                     </div>
 
                     <div class="info-card">
-                        <h3>🔐 Security Features</h3>
+                        <h3> Security Features</h3>
                         <p>Security best practices implemented throughout:</p>
                         <ul>
                             <li><strong>Password Hashing</strong> - Werkzeug security</li>
@@ -308,7 +308,7 @@
                     </div>
 
                     <div class="info-card">
-                        <h3>🌿 Branching Strategy</h3>
+                        <h3> Branching Strategy</h3>
                         <p>Git workflow for safe deployments:</p>
                         <ul>
                             <li><strong>main</strong> - Production deployments</li>
@@ -319,7 +319,7 @@
                     </div>
 
                     <div class="info-card">
-                        <h3>🎨 Frontend Design</h3>
+                        <h3> Frontend Design</h3>
                         <p>Modern UI with premium aesthetics:</p>
                         <ul>
                             <li><strong>Glassmorphism</strong> - Frosted glass effects</li>
@@ -332,7 +332,7 @@
 
                 <!-- Architecture Section -->
                 <div class="architecture-section">
-                    <h3 style="color: var(--text-primary); margin-bottom: 20px; font-size: 18px;">📁 Project Structure
+                    <h3 style="color: var(--text-primary); margin-bottom: 20px; font-size: 18px;"> Project Structure
                     </h3>
                     <div class="file-structure">
                         <span class="folder">gcp-terraform-devops/</span>
@@ -369,16 +369,16 @@
                     <h3 style="color: var(--text-primary); margin: 24px 0 16px; font-size: 18px;">🛠️ Technologies Used
                     </h3>
                     <div class="tech-badges">
-                        <span class="tech-badge">☁️ Google Cloud</span>
-                        <span class="tech-badge">🐳 Docker</span>
-                        <span class="tech-badge">🏗️ Terraform</span>
-                        <span class="tech-badge">🐍 Python</span>
-                        <span class="tech-badge">🌶️ Flask</span>
-                        <span class="tech-badge">🔄 Cloud Build</span>
-                        <span class="tech-badge">🚀 Cloud Run</span>
-                        <span class="tech-badge">📦 Artifact Registry</span>
-                        <span class="tech-badge">🐙 GitHub</span>
-                        <span class="tech-badge">💾 SQLite</span>
+                        <span class="tech-badge"> Google Cloud</span>
+                        <span class="tech-badge"> Docker</span>
+                        <span class="tech-badge"> Terraform</span>
+                        <span class="tech-badge"> Python</span>
+                        <span class="tech-badge"> Flask</span>
+                        <span class="tech-badge"> Cloud Build</span>
+                        <span class="tech-badge"> Cloud Run</span>
+                        <span class="tech-badge"> Artifact Registry</span>
+                        <span class="tech-badge"> GitHub</span>
+                        <span class="tech-badge"> SQLite</span>
                     </div>
                 </div>
             </div>

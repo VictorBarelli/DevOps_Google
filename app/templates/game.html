@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -330,16 +330,16 @@
         <header class="dashboard-header">
             <div style="display: flex; align-items: center; gap: 24px;">
                 <a href="{{ url_for('game') }}"
-                    style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">🎮
+                    style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">
                     Game</a>
-                <h2>🚀 GCP DevOps Dashboard</h2>
+                <h2> GCP DevOps Dashboard</h2>
             </div>
             <div style="display: flex; gap: 16px; align-items: center;">
                 <a href="{{ url_for('dashboard') }}"
-                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">📊 Dashboard</a>
+                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;"> Dashboard</a>
                 {% if session.get('is_admin') %}
                 <a href="{{ url_for('admin_users') }}"
-                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">👥 Users</a>
+                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;"> Users</a>
                 {% endif %}
                 <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
                     <button type="submit" class="logout-btn">Sign Out</button>
@@ -350,14 +350,14 @@
         <main class="dashboard-content">
             <div class="game-container">
                 <div class="game-card">
-                    <h1 class="game-title">🎯 DevOps Reaction Game</h1>
+                    <h1 class="game-title"> DevOps Reaction Game</h1>
                     <p class="game-description">Test your reflexes! Click the targets as fast as you can or time your
                         reaction speed.</p>
 
                     <div class="game-mode-selector">
-                        <button class="mode-btn active" data-mode="reaction" onclick="setGameMode('reaction')">⚡
+                        <button class="mode-btn active" data-mode="reaction" onclick="setGameMode('reaction')">
                             Reaction Time</button>
-                        <button class="mode-btn" data-mode="target" onclick="setGameMode('target')">🎯 Target
+                        <button class="mode-btn" data-mode="target" onclick="setGameMode('target')"> Target
                             Hunt</button>
                     </div>
 
@@ -381,13 +381,13 @@
                     </div>
 
                     <div class="game-controls">
-                        <button class="game-btn primary" onclick="startGame()">🎮 New Game</button>
-                        <button class="game-btn secondary" onclick="resetStats()">🔄 Reset Stats</button>
+                        <button class="game-btn primary" onclick="startGame()"> New Game</button>
+                        <button class="game-btn secondary" onclick="resetStats()"> Reset Stats</button>
                     </div>
                 </div>
 
                 <div class="leaderboard">
-                    <h2 class="leaderboard-title">🏆 Your Best Scores</h2>
+                    <h2 class="leaderboard-title"> Your Best Scores</h2>
                     <ul class="leaderboard-list" id="leaderboardList">
                         <li class="leaderboard-item">
                             <span class="leaderboard-rank gold">#1</span>
@@ -468,7 +468,7 @@
 
             const target = document.createElement('div');
             target.className = 'target';
-            target.innerHTML = '🎯';
+            target.innerHTML = '';
 
             const maxX = gameArea.clientWidth - 60;
             const maxY = gameArea.clientHeight - 60;
@@ -540,7 +540,7 @@
                 gameState = 'result';
                 gameArea.className = 'game-area';
                 message.innerHTML = `
-                    <div style="color: #ff6b6b; font-size: 32px; font-weight: 700;">Too Early! 😅</div>
+                    <div style="color: #ff6b6b; font-size: 32px; font-weight: 700;">Too Early! </div>
                     <div style="margin-top: 16px; font-size: 14px;">Click to try again</div>
                 `;
                 return;
@@ -557,11 +557,11 @@
                 gameArea.className = 'game-area';
 
                 let rating = '';
-                if (reactionTime < 200) rating = '🚀 Lightning Fast!';
-                else if (reactionTime < 250) rating = '⚡ Excellent!';
-                else if (reactionTime < 300) rating = '🔥 Great!';
-                else if (reactionTime < 400) rating = '👍 Good!';
-                else rating = '💪 Keep practicing!';
+                if (reactionTime < 200) rating = ' Lightning Fast!';
+                else if (reactionTime < 250) rating = ' Excellent!';
+                else if (reactionTime < 300) rating = ' Great!';
+                else if (reactionTime < 400) rating = ' Good!';
+                else rating = ' Keep practicing!';
 
                 message.innerHTML = `
                     <div class="reaction-time">${reactionTime}ms</div>
