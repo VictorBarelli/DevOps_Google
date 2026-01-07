@@ -1,6 +1,4 @@
-# ===========================================
-# Cloud Monitoring Configuration
-# ===========================================
+# Cloud Monitoring setup
 
 # Enable Monitoring API
 resource "google_project_service" "monitoring_api" {
@@ -20,9 +18,7 @@ resource "google_monitoring_notification_channel" "email" {
   depends_on = [google_project_service.monitoring_api]
 }
 
-# ===========================================
-# Alert Policies
-# ===========================================
+# Alert policies
 
 # Alert: High Error Rate (5xx errors > 1% of requests)
 resource "google_monitoring_alert_policy" "high_error_rate" {
@@ -141,9 +137,7 @@ resource "google_monitoring_alert_policy" "instance_count_spike" {
   depends_on = [google_project_service.monitoring_api]
 }
 
-# ===========================================
-# Uptime Check
-# ===========================================
+# Uptime check config
 
 resource "google_monitoring_uptime_check_config" "health_check" {
   display_name = "DevOps Dashboard Health Check"

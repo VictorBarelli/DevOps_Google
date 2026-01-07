@@ -1,7 +1,4 @@
-"""
-GCP DevOps Dashboard - Main Application
-A Flask web application with user authentication and admin features.
-"""
+# Main Flask app for the DevOps dashboard
 import os
 from datetime import datetime, timedelta
 from flask import (
@@ -27,7 +24,6 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
-    """User model for authentication and user management."""
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -39,20 +35,16 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
-        """Hash and set the user password."""
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        """Verify password against stored hash."""
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        """String representation of User."""
         return f'<User {self.email}>'
 
 
 def create_default_admin():
-    """Create default admin account if it doesn't exist."""
     admin_email = os.environ.get('ADMIN_EMAIL', 'admin@admin.com')
     admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
 
@@ -78,7 +70,6 @@ if not os.environ.get('TESTING'):
 
 @app.route('/')
 def home():
-    """Redirect to dashboard if logged in, otherwise to login page."""
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
     return redirect(url_for('login'))
@@ -86,7 +77,6 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """Handle login page and authentication."""
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
 
@@ -113,7 +103,6 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    """Handle user registration."""
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
 
@@ -147,7 +136,6 @@ def register():
 
 @app.route('/dashboard')
 def dashboard():
-    """Protected dashboard page."""
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -157,7 +145,6 @@ def dashboard():
 
 @app.route('/game')
 def game():
-    """Game page - Reaction time game."""
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -166,7 +153,7 @@ def game():
 
 @app.route('/admin/users')
 def admin_users():
-    """Admin page to view all users - Admin only."""
+    # admin only
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -196,14 +183,12 @@ def admin_users():
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    """Handle user logout."""
     session.clear()
     return redirect(url_for('login'))
 
 
 @app.route('/api/status')
 def api_status():
-    """API endpoint for health checks."""
     return jsonify({
         "message": "Hello from Google Cloud Run!",
         "status": "success",
@@ -213,7 +198,6 @@ def api_status():
 
 @app.route('/api/users')
 def api_users():
-    """API endpoint to get all users."""
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -234,7 +218,6 @@ def api_users():
 
 @app.route('/api/health')
 def api_health():
-    """Health check endpoint for monitoring."""
     return jsonify({
         "status": "healthy",
         "service": "devops-google",
@@ -245,19 +228,16 @@ def api_health():
 
 @app.route('/api/docs')
 def api_docs():
-    """API Documentation page."""
     return render_template('api_docs.html')
 
 
 @app.errorhandler(404)
 def not_found_error(error):
-    """Handle 404 errors."""
     return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
 def internal_error(error):
-    """Handle 500 errors."""
     db.session.rollback()
     return render_template('500.html'), 500
 

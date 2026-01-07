@@ -70,8 +70,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.01); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.01);
+            }
         }
 
         .game-message {
@@ -207,9 +214,17 @@
             width: 40px;
         }
 
-        .leaderboard-rank.gold { color: #FFD700; }
-        .leaderboard-rank.silver { color: #C0C0C0; }
-        .leaderboard-rank.bronze { color: #CD7F32; }
+        .leaderboard-rank.gold {
+            color: #FFD700;
+        }
+
+        .leaderboard-rank.silver {
+            color: #C0C0C0;
+        }
+
+        .leaderboard-rank.bronze {
+            color: #CD7F32;
+        }
 
         .leaderboard-name {
             flex: 1;
@@ -239,9 +254,19 @@
         }
 
         @keyframes targetPop {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .target:hover {
@@ -304,13 +329,17 @@
     <div class="dashboard-container">
         <header class="dashboard-header">
             <div style="display: flex; align-items: center; gap: 24px;">
-                <a href="{{ url_for('game') }}" style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">🎮 Game</a>
+                <a href="{{ url_for('game') }}"
+                    style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">🎮
+                    Game</a>
                 <h2>🚀 GCP DevOps Dashboard</h2>
             </div>
             <div style="display: flex; gap: 16px; align-items: center;">
-                <a href="{{ url_for('dashboard') }}" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">📊 Dashboard</a>
+                <a href="{{ url_for('dashboard') }}"
+                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">📊 Dashboard</a>
                 {% if session.get('is_admin') %}
-                <a href="{{ url_for('admin_users') }}" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">👥 Users</a>
+                <a href="{{ url_for('admin_users') }}"
+                    style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">👥 Users</a>
                 {% endif %}
                 <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
                     <button type="submit" class="logout-btn">Sign Out</button>
@@ -322,11 +351,14 @@
             <div class="game-container">
                 <div class="game-card">
                     <h1 class="game-title">🎯 DevOps Reaction Game</h1>
-                    <p class="game-description">Test your reflexes! Click the targets as fast as you can or time your reaction speed.</p>
+                    <p class="game-description">Test your reflexes! Click the targets as fast as you can or time your
+                        reaction speed.</p>
 
                     <div class="game-mode-selector">
-                        <button class="mode-btn active" data-mode="reaction" onclick="setGameMode('reaction')">⚡ Reaction Time</button>
-                        <button class="mode-btn" data-mode="target" onclick="setGameMode('target')">🎯 Target Hunt</button>
+                        <button class="mode-btn active" data-mode="reaction" onclick="setGameMode('reaction')">⚡
+                            Reaction Time</button>
+                        <button class="mode-btn" data-mode="target" onclick="setGameMode('target')">🎯 Target
+                            Hunt</button>
                     </div>
 
                     <div class="game-area" id="gameArea" onclick="handleGameClick()">
@@ -430,25 +462,25 @@
 
         function spawnTarget() {
             const gameArea = document.getElementById('gameArea');
-            
+
             // Remove existing targets
             document.querySelectorAll('.target').forEach(t => t.remove());
 
             const target = document.createElement('div');
             target.className = 'target';
             target.innerHTML = '🎯';
-            
+
             const maxX = gameArea.clientWidth - 60;
             const maxY = gameArea.clientHeight - 60;
-            
+
             target.style.left = Math.random() * maxX + 'px';
             target.style.top = Math.random() * maxY + 'px';
-            
+
             target.onclick = (e) => {
                 e.stopPropagation();
                 hitTarget();
             };
-            
+
             gameArea.appendChild(target);
         }
 
@@ -468,14 +500,14 @@
         function showTargetResult(totalTime) {
             const gameArea = document.getElementById('gameArea');
             const message = document.getElementById('gameMessage');
-            
+
             document.querySelectorAll('.target').forEach(t => t.remove());
-            
+
             gameState = 'result';
             gameArea.className = 'game-area';
-            
+
             const avgPerTarget = Math.round(totalTime / TARGET_COUNT);
-            
+
             message.innerHTML = `
                 <div class="reaction-time">${Math.round(totalTime)}ms</div>
                 <div style="margin-top: 16px; font-size: 16px; color: var(--text-secondary);">
@@ -483,7 +515,7 @@
                 </div>
                 <div style="margin-top: 8px; font-size: 14px;">Click to play again</div>
             `;
-            
+
             times.push(Math.round(totalTime));
             updateStats();
             updateLeaderboard();
@@ -504,7 +536,7 @@
                 clearTimeout(timeoutId);
                 const gameArea = document.getElementById('gameArea');
                 const message = document.getElementById('gameMessage');
-                
+
                 gameState = 'result';
                 gameArea.className = 'game-area';
                 message.innerHTML = `
@@ -517,26 +549,26 @@
             if (gameState === 'ready') {
                 const endTime = performance.now();
                 const reactionTime = Math.round(endTime - startTime);
-                
+
                 const gameArea = document.getElementById('gameArea');
                 const message = document.getElementById('gameMessage');
-                
+
                 gameState = 'result';
                 gameArea.className = 'game-area';
-                
+
                 let rating = '';
                 if (reactionTime < 200) rating = '🚀 Lightning Fast!';
                 else if (reactionTime < 250) rating = '⚡ Excellent!';
                 else if (reactionTime < 300) rating = '🔥 Great!';
                 else if (reactionTime < 400) rating = '👍 Good!';
                 else rating = '💪 Keep practicing!';
-                
+
                 message.innerHTML = `
                     <div class="reaction-time">${reactionTime}ms</div>
                     <div style="margin-top: 16px; font-size: 18px;">${rating}</div>
                     <div style="margin-top: 8px; font-size: 14px; color: var(--text-secondary);">Click to try again</div>
                 `;
-                
+
                 times.push(reactionTime);
                 updateStats();
                 updateLeaderboard();
@@ -562,9 +594,9 @@
         function updateLeaderboard() {
             const allTimes = JSON.parse(localStorage.getItem('devopsGameTimes') || '[]');
             const sorted = [...new Set(allTimes)].sort((a, b) => a - b).slice(0, 5);
-            
+
             const list = document.getElementById('leaderboardList');
-            
+
             if (sorted.length === 0) {
                 list.innerHTML = `
                     <li class="leaderboard-item">
@@ -611,7 +643,7 @@
         }
 
         // Load saved stats on page load
-        window.onload = function() {
+        window.onload = function () {
             const savedTimes = JSON.parse(localStorage.getItem('devopsGameTimes') || '[]');
             if (savedTimes.length > 0) {
                 times = savedTimes.slice(-10);
