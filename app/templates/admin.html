@@ -232,7 +232,12 @@
 
     <div class="dashboard-container">
         <header class="dashboard-header">
-            <h2>🚀 GCP DevOps Dashboard</h2>
+            <div style="display: flex; align-items: center; gap: 24px;">
+                <a href="{{ url_for('game') }}"
+                    style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">🎮
+                    Game</a>
+                <h2>🚀 GCP DevOps Dashboard</h2>
+            </div>
             <div class="nav-links">
                 <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
                 <a href="{{ url_for('admin_users') }}" class="nav-link active">Users</a>

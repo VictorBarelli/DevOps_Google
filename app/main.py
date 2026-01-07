@@ -155,6 +155,15 @@ def dashboard():
     return render_template('dashboard.html', username=username)
 
 
+@app.route('/game')
+def game():
+    """Game page - Reaction time game."""
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    return render_template('game.html')
+
+
 @app.route('/admin/users')
 def admin_users():
     """Admin page to view all users - Admin only."""

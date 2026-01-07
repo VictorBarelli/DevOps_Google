@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevOps Reaction Game - Test your skills!">
+    <title>Game | GCP DevOps</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .game-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .game-title {
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .game-description {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .game-area {
+            width: 100%;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--glass-border);
+            transition: border-color 0.3s ease;
+        }
+
+        .game-area:hover {
+            border-color: var(--accent-purple);
+        }
+
+        .game-area.waiting {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 142, 83, 0.2));
+        }
+
+        .game-area.ready {
+            background: linear-gradient(135deg, rgba(76, 217, 100, 0.3), rgba(46, 204, 113, 0.3));
+            animation: pulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.01); }
+        }
+
+        .game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .game-message.large {
+            font-size: 48px;
+        }
+
+        .reaction-time {
+            font-size: 72px;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .game-btn {
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .game-btn.primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .game-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .game-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .game-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .leaderboard {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+        }
+
+        .leaderboard-title {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(4px);
+        }
+
+        .leaderboard-rank {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            width: 40px;
+        }
+
+        .leaderboard-rank.gold { color: #FFD700; }
+        .leaderboard-rank.silver { color: #C0C0C0; }
+        .leaderboard-rank.bronze { color: #CD7F32; }
+
+        .leaderboard-name {
+            flex: 1;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .leaderboard-time {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .target {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: targetPop 0.3s ease-out;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+        }
+
+        @keyframes targetPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .target:hover {
+            transform: scale(1.1);
+        }
+
+        .game-mode-selector {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .mode-btn {
+            padding: 10px 24px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mode-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        .mode-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-area {
+                height: 300px;
+            }
+
+            .reaction-time {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Background Orbs -->
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div style="display: flex; align-items: center; gap: 24px;">
+                <a href="{{ url_for('game') }}" style="color: var(--accent-purple); text-decoration: none; font-size: 14px; font-weight: 500;">🎮 Game</a>
+                <h2>🚀 GCP DevOps Dashboard</h2>
+            </div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <a href="{{ url_for('dashboard') }}" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">📊 Dashboard</a>
+                {% if session.get('is_admin') %}
+                <a href="{{ url_for('admin_users') }}" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;">👥 Users</a>
+                {% endif %}
+                <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                    <button type="submit" class="logout-btn">Sign Out</button>
+                </form>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <div class="game-container">
+                <div class="game-card">
+                    <h1 class="game-title">🎯 DevOps Reaction Game</h1>
+                    <p class="game-description">Test your reflexes! Click the targets as fast as you can or time your reaction speed.</p>
+
+                    <div class="game-mode-selector">
+                        <button class="mode-btn active" data-mode="reaction" onclick="setGameMode('reaction')">⚡ Reaction Time</button>
+                        <button class="mode-btn" data-mode="target" onclick="setGameMode('target')">🎯 Target Hunt</button>
+                    </div>
+
+                    <div class="game-area" id="gameArea" onclick="handleGameClick()">
+                        <div class="game-message" id="gameMessage">Click to Start!</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="bestTime">-</div>
+                            <div class="stat-label">Best Time (ms)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="avgTime">-</div>
+                            <div class="stat-label">Average (ms)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="attempts">0</div>
+                            <div class="stat-label">Attempts</div>
+                        </div>
+                    </div>
+
+                    <div class="game-controls">
+                        <button class="game-btn primary" onclick="startGame()">🎮 New Game</button>
+                        <button class="game-btn secondary" onclick="resetStats()">🔄 Reset Stats</button>
+                    </div>
+                </div>
+
+                <div class="leaderboard">
+                    <h2 class="leaderboard-title">🏆 Your Best Scores</h2>
+                    <ul class="leaderboard-list" id="leaderboardList">
+                        <li class="leaderboard-item">
+                            <span class="leaderboard-rank gold">#1</span>
+                            <span class="leaderboard-name">Play to set a record!</span>
+                            <span class="leaderboard-time">-</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let gameState = 'idle'; // idle, waiting, ready, result
+        let gameMode = 'reaction'; // reaction, target
+        let startTime = 0;
+        let timeoutId = null;
+        let times = [];
+        let targetScore = 0;
+        let targetStartTime = 0;
+        const TARGET_COUNT = 10;
+        let targetsHit = 0;
+
+        function setGameMode(mode) {
+            gameMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+            resetGame();
+        }
+
+        function startGame() {
+            if (gameMode === 'reaction') {
+                startReactionGame();
+            } else {
+                startTargetGame();
+            }
+        }
+
+        function startReactionGame() {
+            const gameArea = document.getElementById('gameArea');
+            const message = document.getElementById('gameMessage');
+
+            gameState = 'waiting';
+            gameArea.className = 'game-area waiting';
+            message.innerHTML = 'Wait for green...';
+            message.className = 'game-message';
+
+            const delay = Math.random() * 3000 + 2000; // 2-5 seconds
+
+            timeoutId = setTimeout(() => {
+                gameState = 'ready';
+                gameArea.className = 'game-area ready';
+                message.innerHTML = 'CLICK NOW!';
+                message.className = 'game-message large';
+                startTime = performance.now();
+            }, delay);
+        }
+
+        function startTargetGame() {
+            const gameArea = document.getElementById('gameArea');
+            const message = document.getElementById('gameMessage');
+
+            targetsHit = 0;
+            targetStartTime = performance.now();
+            gameState = 'target';
+            gameArea.className = 'game-area';
+            message.innerHTML = `Targets: 0/${TARGET_COUNT}`;
+
+            spawnTarget();
+        }
+
+        function spawnTarget() {
+            const gameArea = document.getElementById('gameArea');
+            
+            // Remove existing targets
+            document.querySelectorAll('.target').forEach(t => t.remove());
+
+            const target = document.createElement('div');
+            target.className = 'target';
+            target.innerHTML = '🎯';
+            
+            const maxX = gameArea.clientWidth - 60;
+            const maxY = gameArea.clientHeight - 60;
+            
+            target.style.left = Math.random() * maxX + 'px';
+            target.style.top = Math.random() * maxY + 'px';
+            
+            target.onclick = (e) => {
+                e.stopPropagation();
+                hitTarget();
+            };
+            
+            gameArea.appendChild(target);
+        }
+
+        function hitTarget() {
+            targetsHit++;
+            const message = document.getElementById('gameMessage');
+            message.innerHTML = `Targets: ${targetsHit}/${TARGET_COUNT}`;
+
+            if (targetsHit >= TARGET_COUNT) {
+                const totalTime = performance.now() - targetStartTime;
+                showTargetResult(totalTime);
+            } else {
+                spawnTarget();
+            }
+        }
+
+        function showTargetResult(totalTime) {
+            const gameArea = document.getElementById('gameArea');
+            const message = document.getElementById('gameMessage');
+            
+            document.querySelectorAll('.target').forEach(t => t.remove());
+            
+            gameState = 'result';
+            gameArea.className = 'game-area';
+            
+            const avgPerTarget = Math.round(totalTime / TARGET_COUNT);
+            
+            message.innerHTML = `
+                <div class="reaction-time">${Math.round(totalTime)}ms</div>
+                <div style="margin-top: 16px; font-size: 16px; color: var(--text-secondary);">
+                    ${avgPerTarget}ms per target average
+                </div>
+                <div style="margin-top: 8px; font-size: 14px;">Click to play again</div>
+            `;
+            
+            times.push(Math.round(totalTime));
+            updateStats();
+            updateLeaderboard();
+        }
+
+        function handleGameClick() {
+            if (gameMode === 'target' && gameState !== 'result' && gameState !== 'idle') {
+                return;
+            }
+
+            if (gameState === 'idle' || gameState === 'result') {
+                startGame();
+                return;
+            }
+
+            if (gameState === 'waiting') {
+                // Too early!
+                clearTimeout(timeoutId);
+                const gameArea = document.getElementById('gameArea');
+                const message = document.getElementById('gameMessage');
+                
+                gameState = 'result';
+                gameArea.className = 'game-area';
+                message.innerHTML = `
+                    <div style="color: #ff6b6b; font-size: 32px; font-weight: 700;">Too Early! 😅</div>
+                    <div style="margin-top: 16px; font-size: 14px;">Click to try again</div>
+                `;
+                return;
+            }
+
+            if (gameState === 'ready') {
+                const endTime = performance.now();
+                const reactionTime = Math.round(endTime - startTime);
+                
+                const gameArea = document.getElementById('gameArea');
+                const message = document.getElementById('gameMessage');
+                
+                gameState = 'result';
+                gameArea.className = 'game-area';
+                
+                let rating = '';
+                if (reactionTime < 200) rating = '🚀 Lightning Fast!';
+                else if (reactionTime < 250) rating = '⚡ Excellent!';
+                else if (reactionTime < 300) rating = '🔥 Great!';
+                else if (reactionTime < 400) rating = '👍 Good!';
+                else rating = '💪 Keep practicing!';
+                
+                message.innerHTML = `
+                    <div class="reaction-time">${reactionTime}ms</div>
+                    <div style="margin-top: 16px; font-size: 18px;">${rating}</div>
+                    <div style="margin-top: 8px; font-size: 14px; color: var(--text-secondary);">Click to try again</div>
+                `;
+                
+                times.push(reactionTime);
+                updateStats();
+                updateLeaderboard();
+            }
+        }
+
+        function updateStats() {
+            if (times.length === 0) return;
+
+            const best = Math.min(...times);
+            const avg = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
+
+            document.getElementById('bestTime').textContent = best;
+            document.getElementById('avgTime').textContent = avg;
+            document.getElementById('attempts').textContent = times.length;
+
+            // Save to localStorage
+            const savedTimes = JSON.parse(localStorage.getItem('devopsGameTimes') || '[]');
+            savedTimes.push(times[times.length - 1]);
+            localStorage.setItem('devopsGameTimes', JSON.stringify(savedTimes.slice(-100)));
+        }
+
+        function updateLeaderboard() {
+            const allTimes = JSON.parse(localStorage.getItem('devopsGameTimes') || '[]');
+            const sorted = [...new Set(allTimes)].sort((a, b) => a - b).slice(0, 5);
+            
+            const list = document.getElementById('leaderboardList');
+            
+            if (sorted.length === 0) {
+                list.innerHTML = `
+                    <li class="leaderboard-item">
+                        <span class="leaderboard-rank">#1</span>
+                        <span class="leaderboard-name">Play to set a record!</span>
+                        <span class="leaderboard-time">-</span>
+                    </li>
+                `;
+                return;
+            }
+
+            list.innerHTML = sorted.map((time, i) => {
+                const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+                const label = gameMode === 'reaction' ? 'Reaction' : 'Target Hunt';
+                return `
+                    <li class="leaderboard-item">
+                        <span class="leaderboard-rank ${rankClass}">#${i + 1}</span>
+                        <span class="leaderboard-name">${label}</span>
+                        <span class="leaderboard-time">${time}ms</span>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function resetStats() {
+            times = [];
+            localStorage.removeItem('devopsGameTimes');
+            document.getElementById('bestTime').textContent = '-';
+            document.getElementById('avgTime').textContent = '-';
+            document.getElementById('attempts').textContent = '0';
+            updateLeaderboard();
+            resetGame();
+        }
+
+        function resetGame() {
+            clearTimeout(timeoutId);
+            gameState = 'idle';
+            const gameArea = document.getElementById('gameArea');
+            const message = document.getElementById('gameMessage');
+            gameArea.className = 'game-area';
+            message.innerHTML = 'Click to Start!';
+            message.className = 'game-message';
+            document.querySelectorAll('.target').forEach(t => t.remove());
+        }
+
+        // Load saved stats on page load
+        window.onload = function() {
+            const savedTimes = JSON.parse(localStorage.getItem('devopsGameTimes') || '[]');
+            if (savedTimes.length > 0) {
+                times = savedTimes.slice(-10);
+                updateStats();
+                updateLeaderboard();
+            }
+        };
+    </script>
+</body>
+
+</html>
