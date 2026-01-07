@@ -63,11 +63,26 @@ Default admin login: `admin@admin.com` / `admin123`
 ## CI/CD pipeline
 
 The pipeline runs on every push:
-1. Lint (flake8)
-2. Run tests (pytest)
-3. Build Docker image
-4. Push to Artifact Registry
-5. Deploy to Cloud Run
+1. Lint (flake8) - code style checks
+2. Security scan (Bandit) - Python security vulnerabilities
+3. Run tests (pytest)
+4. Build Docker image
+5. Container scan (Trivy) - image vulnerability scan
+6. Push to Artifact Registry
+7. Deploy to Cloud Run
+
+### Security scanning
+
+**Bandit** scans Python code for:
+- Hardcoded passwords/secrets
+- SQL injection risks
+- Insecure function usage
+- Weak cryptography
+
+**Trivy** scans Docker images for:
+- Known CVEs in OS packages
+- Vulnerable Python dependencies
+- Outdated base images
 
 ## Environment variables
 
