@@ -1,5 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+<script>
+    (function () {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+</script>
 
 <head>
     <meta charset="UTF-8">

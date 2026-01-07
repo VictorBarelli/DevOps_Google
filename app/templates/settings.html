@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<script>
+    (function () {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+</script>
 
 <head>
     <meta charset="UTF-8">
@@ -353,10 +359,10 @@
                     <div class="toggle-group">
                         <div class="toggle-label">
                             <h4>Dark Mode</h4>
-                            <p>Use dark theme (always on)</p>
+                            <p>Switch between dark and light theme</p>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox" checked disabled>
+                            <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -382,6 +388,33 @@
             </div>
         </main>
     </div>
+
+    <script>
+        function toggleTheme() {
+            const toggle = document.getElementById('themeToggle');
+            if (toggle.checked) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const toggle = document.getElementById('themeToggle');
+
+            if (savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                toggle.checked = false;
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                toggle.checked = true;
+            }
+        })();
+    </script>
 </body>
 
 </html>

@@ -31,10 +31,22 @@
     --accent-purple: #667eea;
     --accent-pink: #f093fb;
     --accent-coral: #f5576c;
+    --accent-cyan: #00d4ff;
 
     /* Effects */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --shadow-glow: 0 8px 32px rgba(102, 126, 234, 0.4);
+}
+
+/* Light Mode */
+[data-theme="light"] {
+    --background-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 50%, #d1d8e0 100%);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.1);
+    --text-primary: #1a1a2e;
+    --text-secondary: rgba(26, 26, 46, 0.7);
+    --text-muted: rgba(26, 26, 46, 0.5);
 }
 
 body {
